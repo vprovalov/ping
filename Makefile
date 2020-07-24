@@ -1,4 +1,4 @@
 server:
-	go build -o server server.go
+	go build -o bin/server server.go
 
 all: server
