@@ -36,11 +36,11 @@ Resources:
             Service:
               - "ec2.amazonaws.com"
           Action: sts:AssumeRole
-        ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/CloudWatchFullAccess 
-        Tags:
-          - Key: Name
-            Value: !Ref AWS::StackName
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchFullAccess 
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
 
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
@@ -49,18 +49,19 @@ Resources:
         - Ref: InstanceRole
 
   Instance:
-    Type: AWS::EC2::Instance CreationPolicy:
+    Type: AWS::EC2::Instance 
+    CreationPolicy:
       ResourceSignal:
-          Timeout: PT15M
+          Timeout: PT5M
           Count: 1
-      Metadata:
-        AWS::CloudFormation::Init:
-          config: 
-            packages:
-              yum: 
-                wget: []
-                unzip: []
-      Properties:
+    Metadata:
+      AWS::CloudFormation::Init:
+        config: 
+          packages:
+            yum: 
+              wget: []
+              unzip: []
+    Properties:
         ImageId: !Ref EC2AMI
         InstanceType: !Ref EC2InstanceType
         IamInstanceProfile: !Ref InstanceProfile 
@@ -101,7 +102,7 @@ Resources:
               cd app
               make all
               
-              ./server
+              ./bin/server &
             EOF
 
             chown ec2-user:ec2-user /tmp/install_script.sh && chmod a+x /tmp/install_script.sh
