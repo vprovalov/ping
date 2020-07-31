@@ -93,8 +93,15 @@ Resources:
         config: 
           packages:
             yum: 
-              wget: []
-              unzip: []
+              ruby: []
+          files:
+            /home/ec2-user/install:
+              source: !Sub "https://aws-codedeploy-${AWS::Region}.s3.amazonaws.com/latest/install"
+              mode: "000755" # executable
+          commands:
+            00-install-cd-agent:
+              command: "./install auto"
+              cwd: "/home/ec2-user/"
     Properties:
         ImageId: !Ref EC2AMI
         InstanceType: !Ref EC2InstanceType
@@ -115,9 +122,6 @@ Resources:
             # Get latest cfn scripts; https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#cfninit
             yum install -y aws-cfn-bootstrap
             
-            # Have CloudFormation install any files and packages from the metadata
-            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --region ${AWS::Region} --resource Instance
-
             # Install go
             yum install -y golang
 
