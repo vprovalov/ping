@@ -94,6 +94,7 @@ Resources:
           packages:
             yum: 
               ruby: []
+              git: []
           files:
             /home/ec2-user/install:
               source: !Sub "https://aws-codedeploy-${AWS::Region}.s3.amazonaws.com/latest/install"
@@ -118,6 +119,9 @@ Resources:
 
             # Update all packages
             yum -y update
+
+            # Install process manager
+            go get github.com/struCoder/pmgo
 
             # Get latest cfn scripts; https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#cfninit
             yum install -y aws-cfn-bootstrap
